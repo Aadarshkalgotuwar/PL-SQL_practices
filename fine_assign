@@ -1,0 +1,50 @@
+create table borrow(roll_no integer, name varchar(20),date_of_issue date,book_name varchar(20),status varchar(20));
+create table fine(roll_no integer,sys_date date, fine integer);
+insert into borrow values(1,'aadarsh','12-2-18','dbms','i');
+insert into borrow values(2,'naachiket','001-008-2018','dbms','i');
+insert into borrow values(3,'vikram','12-2-16','dbms','i');
+insert into borrow values(4,'vedant','12-2-18','dbms','i');
+insert into borrow values(5,'anand','9-2-19','dbms','i');
+
+declare
+  rollno number;
+  name1 varchar(20);
+  no_of_days number(20);
+  amt int;
+  doi date;
+  System_date date;
+  
+  begin
+   rollno:=:roll_no;
+   name1:=:name1;
+   
+   select Sysdate into System_date from dual;
+   select date_of_issue into doi from borrow where roll_no:=:rollno and book_name=name1;
+   dbms_output.put_line(doi);
+   no_of_days:=System_date-doi;
+   dbms_output.put_line(no_of_days);
+   if no_of_days>15 and no_of_days<30 then
+   amt:=no_of_days*5;
+   dbms_output.put_line('amount'||amt);
+   elsif no_of_days>30 then 
+   amt:=no_of_days*50;
+   dbms_output.put_line('amount'||amt);
+   else
+   dbms_output.put_line('no fine');
+   end if;
+   if no_of_days>15 then
+   insert into fine values(rollno,sysdate,amt);
+   update borrow set status='r'where roll_no=rollno;
+   end if;
+   exception 
+   when no_data_found then
+   dbms_output.put_line(rollno||'not found');
+   end;
+/
+
+   
+
+
+   
+   
+
